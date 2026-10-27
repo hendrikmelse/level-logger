@@ -1,0 +1,127 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f6f8fa;
+  --fg: #14202b;
+  --muted: #5b6b7a;
+  --card: #ffffff;
+  --border: #d4dce4;
+  --accent: #0b5ea8;
+  --line: #0b5ea8;
+  --band: rgba(11, 94, 168, 0.16);
+  --grid: rgba(0, 0, 0, 0.08);
+  --warn: #b3261e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #10161c;
+    --fg: #e6edf3;
+    --muted: #93a4b4;
+    --card: #18212a;
+    --border: #2b3947;
+    --accent: #5db1f2;
+    --line: #5db1f2;
+    --band: rgba(93, 177, 242, 0.2);
+    --grid: rgba(255, 255, 255, 0.1);
+    --warn: #ff8a80;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 1.25rem;
+  margin: 0 0 12px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.problem,
+.stale {
+  color: var(--warn);
+}
+
+.current {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.current .value {
+  font-size: 3.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.current .unit {
+  font-size: 1.5rem;
+  color: var(--muted);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+button {
+  font: inherit;
+  color: var(--fg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+button.link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.chart {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.hint {
+  font-size: 0.875rem;
+}
+
+.uplot,
+.u-legend {
+  color: var(--fg);
+}
