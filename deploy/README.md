@@ -13,6 +13,8 @@ One image holds the API and the built web app. CI builds it, pushes it to `ghcr.
 
 ## One-time setup
 
+Done on 2026-10-27; kept as the record of how the server was set up and for rebuilding it.
+
 1. **DNS:** add an A record `sump.hendrikmelse.com` pointing at the server (same IP as the flashcards record).
 2. **Database** (on the server):
 
@@ -37,7 +39,7 @@ One image holds the API and the built web app. CI builds it, pushes it to `ghcr.
    }
    ```
 5. **CI deploy key:** same procedure as flashcards step 7, with its own key pair: make a new ed25519 key, authorize it in `/home/deploy/.ssh/authorized_keys` as `restrict,command="/srv/level-logger/ci-entrypoint.sh" ssh-ed25519 AAAA... github-actions-deploy-level-logger`, and set the repository secrets `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_SSH_KEY`, `DEPLOY_KNOWN_HOSTS` and the variable `DEPLOY_ENABLED=true` on `hendrikmelse/level-logger`. The default branch is `master`, and CI deploys on pushes to it.
-6. **Merge to `master`** (or run the workflow). Then create the device and calibrate it, below.
+6. **Push to `master`** (or run the workflow). Then create the device and calibrate it, below.
 
 ## Devices and calibration on the server
 
@@ -52,6 +54,7 @@ Other commands: `list`, `rotate-key <id>`, `calibrations <id>` (see the README).
 
 ## Operating
 
+- **Caddyfile edits:** `/srv/caddy/Caddyfile` is bind-mounted into the container as a single file, so edit it in place (`cat new > Caddyfile`, or an editor that keeps the inode). Replacing it with `mv` leaves the container reading the old file. Validate before reloading.
 - **Logs:** `sudo journalctl -t level-logger-api`.
 - **Deploy log:** `sudo journalctl -t level-logger-deploy`.
 - **Rolling back:** `./deploy.sh ghcr.io/hendrikmelse/level-logger:<previous sha>`; `current-image` holds the deployed one. Migrations are not undone, so keep them backward compatible.

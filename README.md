@@ -2,7 +2,7 @@
 
 A public web viewer for a device that continuously records the water level in a sump pump pit, and the API the device logs to.
 
-Live at **sump.hendrikmelse.com** (once deployed; see [deploy/README.md](deploy/README.md)).
+Live at **https://sump.hendrikmelse.com**. Deployment and server operation are in [deploy/README.md](deploy/README.md).
 
 ## What it does
 
@@ -19,6 +19,7 @@ TypeScript in an npm workspaces monorepo (Node 22+), set up like the owner's fla
 apps/api/         Fastify API: ingest, device CLI, chart queries (also serves the built web app)
 apps/web/         React single-page app
 packages/shared/  Types, ingest schemas and the calibration math shared by both
+firmware/         ESP32-C3 Super Mini firmware (PlatformIO): samples the sensor, uploads batches (see firmware/README.md)
 deploy/           Production runbook (deploy/README.md) and the server-side files
 ```
 
