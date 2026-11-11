@@ -14,7 +14,16 @@
 // Most readings sent in one request (the server accepts up to 10,800).
 #define MAX_PER_REQUEST 600
 
-#define WIFI_CONNECT_TIMEOUT_MS 20000UL
+// Status LED on an external LED wired to GPIO10, lit when the pin is HIGH (LED + resistor from the
+// pin to ground). Not GPIO8 (on-board LED) or GPIO9 (BOOT strapping pin: held low at reset it makes
+// the chip enter the download bootloader instead of running).
+#define LED_PIN 10
+#define LED_ON_LEVEL HIGH
+#define LED_ON_MS 50
+#define LED_OFF_MS 50
+
+// While WiFi is down the LED stays solid on, and a new connection attempt starts this often.
+#define WIFI_RETRY_MS 20000UL
 #define HTTP_TIMEOUT_MS 15000UL
 
 // Some Super Mini boards cannot associate at full TX power (antenna design). Comment out if yours is fine.

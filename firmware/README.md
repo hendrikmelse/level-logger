@@ -31,6 +31,22 @@ npm run device -- calibrate <id> <adc1> <inches1> <adc2> <inches2>
 
 Old readings keep the calibration that was in force when they were taken. The C3 ADC is noticeably non-linear near both ends; calibrate with points inside the range you actually expect.
 
+## Behavior
+
+- **Two tasks.** A sampler task takes a reading every second and drives the LED; `loop()` handles WiFi and uploads. Uploads (a TLS handshake is several seconds on the C3) therefore never leave gaps in the data.
+- **Upload cadence.** About once a minute it uploads what was buffered when the upload began; readings taken during the upload wait for the next one. A batch is deleted from the buffer only after a 2xx (or a 400, which would never succeed). A lost response means the batch is stored twice (known limit, see CLAUDE.md).
+- **WiFi.** Connects at power-up. Auto-reconnect is on, plus a fresh attempt every `WIFI_RETRY_MS` while down. NTP is restarted on every (re)connect.
+- **Clock.** The TLS certificate check needs the date, so uploads are skipped until NTP has set the clock (`Upload skipped: clock not set yet`). If NTP is blocked on the network, the device never uploads.
+- **LED** (external, active-high, `LED_PIN` = GPIO10; not GPIO8 = on-board LED, not GPIO9 = BOOT strapping pin): solid on = no WiFi; one short blink per reading; two short blinks after a successful upload.
+
+## Reading the serial monitor
+
+`pio device monitor` shows `adc=… buffered=…` each second, and at boot `last reset: <reason>` (a `BROWNOUT` or `PANIC` means the board is resetting). About once a minute a `Status:` line gives uptime, WiFi state, RSSI, clock state and buffered count, then `POST n readings -> 200 {...} (… ms)`. Run it with `python -m platformio` if `pio` is not on your PATH.
+
 ## Tuning
 
-`include/config.h`: sample and upload intervals, oversampling, buffer size, pin. Uploads block sampling while they run (a few hundred ms normally, up to the timeouts if the network is bad), so a flaky network leaves small gaps rather than buffering during the upload.
+`include/config.h`: sample and upload intervals, oversampling, buffer size, ADC pin, LED pin and polarity, WiFi retry interval.
+
+## Sensor
+
+The old Arduino sketch is kept in `old/Level_Sensor.ino` for reference. Its conversion was `height = -7447.8 * (1 / (raw * 5.0 / 3.3)) + 20.916` (10-bit ADC), which is not linear in `raw`, so the server's two-point linear calibration will not reproduce it exactly. See CLAUDE.md. The sensor is a resistor divider; feed it from the board's 3V3 pin, never 5 V, because GPIO inputs must stay under 3.3 V.

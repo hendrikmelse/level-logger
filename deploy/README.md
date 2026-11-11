@@ -50,6 +50,8 @@ docker compose run --rm --no-deps api node apps/api/dist/device.js create "Sump 
 docker compose run --rm --no-deps api node apps/api/dist/device.js calibrate 1 210 4 640 20 --note "first measurement"
 ```
 
+`docker compose` refuses to run by hand unless `IMAGE` is set; use the running image: `IMAGE="$(cat current-image)" docker compose run --rm --no-deps api node apps/api/dist/device.js list`.
+
 Other commands: `list`, `rotate-key <id>`, `calibrations <id>` (see the README). Put the API key in the device's firmware only; it is stored hashed and cannot be recovered, only rotated.
 
 ## Operating
